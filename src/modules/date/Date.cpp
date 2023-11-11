@@ -3,11 +3,13 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip>
+#include <iostream>
 
 #include "data/MonthNames.h"
 #include "data/WeekdayNames.h"
 #include "faker-cxx/Helper.h"
 #include "faker-cxx/Number.h"
+#include "fmt/chrono.h"
 #include "fmt/format.h"
 
 namespace faker
@@ -16,15 +18,7 @@ namespace
 {
 std::string serializeTimePoint(const auto& timePoint)
 {
-    time_t timePointTimeT = std::chrono::system_clock::to_time_t(timePoint);
-
-    std::tm utcTime = *std::gmtime(&timePointTimeT);
-
-    std::stringstream ss;
-
-    ss << std::put_time(&utcTime, "%FT%TZ");
-
-    return ss.str();
+    return std::format("{0:%F}T{0:%TZ}", std::chrono::time_point_cast<std::chrono::seconds>(timePoint));
 }
 
 std::string betweenDate(const auto& from, const auto& to)
